@@ -1,7 +1,7 @@
 package taskservice
 
 type TaskService interface {
-	CreateTask(task Task) (Task, error)
+	CreateTask(req Task) (Task, error)
 	GetAllTask() ([]Task, error)
 	GetTaskID(id string) (Task, error)
 	UpdateTask(id, task string) (Task, error)
@@ -16,12 +16,12 @@ func NewTaskService(r TaskRepository) TaskService {
 	return &taskService{repo: r}
 }
 
-func (s *taskService) CreateTask(task Task) (Task, error) {
-	err := s.repo.CreateTask(task)
+func (s *taskService) CreateTask(req Task) (Task, error) {
+	err := s.repo.CreateTask(&req)
 	if err != nil {
 		return Task{}, err
 	}
-	return task, nil
+	return req, nil
 }
 
 func (s *taskService) GetAllTask() ([]Task, error) {

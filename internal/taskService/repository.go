@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 //CRUD
 type TaskRepository interface {
-	CreateTask(req Task) error
+	CreateTask(req *Task) error
 	GetAllTask() ([]Task, error)
 	GetTaskID(id string) (Task, error)
 	UpdateTask(task Task) error
@@ -19,7 +19,7 @@ func NewTaskRepository(db *gorm.DB) TaskRepository {
 	return &taskRepository{db: db}
 }
 
-func (r *taskRepository) CreateTask(req Task) error {
+func (r *taskRepository) CreateTask(req *Task) error {
 	return r.db.Create(&req).Error
 }
 

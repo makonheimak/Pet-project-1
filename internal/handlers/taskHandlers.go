@@ -24,19 +24,17 @@ func (h *TaskHandlers) PostTask(c echo.Context) error {
 	task, err := h.service.CreateTask(req)
 
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Could not Create task"})
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Could not Create task"})
 	}
 
 	return c.JSON(http.StatusCreated, task)
 }
 
-func (h *TaskHandlers) GetTask(c echo.Context) error {
+func (h *TaskHandlers) GetTasks(c echo.Context) error {
 	tasks, err := h.service.GetAllTask()
-
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Could not get task"})
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Could not get tasks"})
 	}
-
 	return c.JSON(http.StatusOK, tasks)
 }
 

@@ -26,7 +26,7 @@ func main() {
 	e.Use(middleware.Logger())
 
 	e.POST("/task", taskHandlers.PostTask)
-	e.GET("/task", taskHandlers.GetTask)
+	e.GET("/task", taskHandlers.GetTasks)
 	e.PATCH("/task/:id", taskHandlers.PatchTask)
 	e.DELETE("/task/:id", taskHandlers.DeleteTask)
 

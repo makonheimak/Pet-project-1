@@ -2,8 +2,8 @@ package taskservice
 
 type TaskService interface {
 	CreateTask(req Task) (Task, error)
-	GetAllTask() ([]Task, error)
-	GetTaskID(id string) (Task, error)
+	GetAllTasks() ([]Task, error)
+	GetTaskByID(id string) (Task, error)
 	UpdateTask(id, task string) (Task, error)
 	DeleteTask(id string) error
 }
@@ -24,16 +24,16 @@ func (s *taskService) CreateTask(req Task) (Task, error) {
 	return req, nil
 }
 
-func (s *taskService) GetAllTask() ([]Task, error) {
-	tasks, err := s.repo.GetAllTask()
+func (s *taskService) GetAllTasks() ([]Task, error) {
+	tasks, err := s.repo.GetAllTasks()
 	if err != nil {
 		return nil, err
 	}
 	return tasks, nil
 }
 
-func (s *taskService) GetTaskID(id string) (Task, error) {
-	tasks, err := s.repo.GetTaskID(id)
+func (s *taskService) GetTaskByID(id string) (Task, error) {
+	tasks, err := s.repo.GetTaskByID(id)
 	if err != nil {
 		return Task{}, err
 	}
@@ -41,7 +41,7 @@ func (s *taskService) GetTaskID(id string) (Task, error) {
 }
 
 func (s *taskService) UpdateTask(id string, newText string) (Task, error) {
-	task, err := s.repo.GetTaskID(id)
+	task, err := s.repo.GetTaskByID(id)
 	if err != nil {
 		return Task{}, err
 	}

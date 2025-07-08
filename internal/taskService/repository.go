@@ -5,8 +5,8 @@ import "gorm.io/gorm"
 //CRUD
 type TaskRepository interface {
 	CreateTask(req *Task) error
-	GetAllTask() ([]Task, error)
-	GetTaskID(id string) (Task, error)
+	GetAllTasks() ([]Task, error)
+	GetTaskByID(id string) (Task, error)
 	UpdateTask(task Task) error
 	DeleteTask(id string) error
 }
@@ -23,13 +23,13 @@ func (r *taskRepository) CreateTask(req *Task) error {
 	return r.db.Create(&req).Error
 }
 
-func (r *taskRepository) GetAllTask() ([]Task, error) {
+func (r *taskRepository) GetAllTasks() ([]Task, error) {
 	var tasks = []Task{}
 	err := r.db.Find(&tasks).Error
 	return tasks, err
 }
 
-func (r *taskRepository) GetTaskID(id string) (Task, error) {
+func (r *taskRepository) GetTaskByID(id string) (Task, error) {
 	var task Task
 	err := r.db.First(&task, "id = ?", id).Error
 	return task, err

@@ -15,7 +15,7 @@ func NewTaskHandlers(s taskservice.TaskService) *TaskHandlers {
 	return &TaskHandlers{service: s}
 }
 
-func (h *TaskHandlers) PostTasks(c echo.Context) error {
+func (h *TaskHandlers) PostTask(c echo.Context) error {
 	var req taskservice.Task
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid json"})
@@ -30,15 +30,15 @@ func (h *TaskHandlers) PostTasks(c echo.Context) error {
 	return c.JSON(http.StatusCreated, task)
 }
 
-func (h *TaskHandlers) GetTaskss(c echo.Context) error {
-	tasks, err := h.service.GetAllTask()
+func (h *TaskHandlers) GetTasks(c echo.Context) error {
+	tasks, err := h.service.GetAllTasks()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Could not get tasks"})
 	}
 	return c.JSON(http.StatusOK, tasks)
 }
 
-func (h *TaskHandlers) PatchTasks(c echo.Context) error {
+func (h *TaskHandlers) PatchTask(c echo.Context) error {
 	id := c.Param("id")
 
 	var req taskservice.Task
@@ -55,7 +55,7 @@ func (h *TaskHandlers) PatchTasks(c echo.Context) error {
 	return c.JSON(http.StatusOK, updateTask)
 }
 
-func (h *TaskHandlers) DeleteTasks(c echo.Context) error {
+func (h *TaskHandlers) DeleteTask(c echo.Context) error {
 	id := c.Param("id")
 
 	if err := h.service.DeleteTask(id); err != nil {

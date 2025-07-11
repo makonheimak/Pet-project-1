@@ -3,9 +3,9 @@ package taskservice
 type TaskService interface {
 	CreateTask(req Task) (Task, error)
 	GetAllTasks() ([]Task, error)
-	GetTaskByID(id string) (Task, error)
-	UpdateTask(id, task string) (Task, error)
-	DeleteTask(id string) error
+	GetTaskByID(id int64) (Task, error)
+	UpdateTask(id int64, task string) (Task, error)
+	DeleteTask(id int64) error
 }
 
 type taskService struct {
@@ -32,15 +32,15 @@ func (s *taskService) GetAllTasks() ([]Task, error) {
 	return tasks, nil
 }
 
-func (s *taskService) GetTaskByID(id string) (Task, error) {
-	tasks, err := s.repo.GetTaskByID(id)
+func (s *taskService) GetTaskByID(id int64) (Task, error) {
+	task, err := s.repo.GetTaskByID(id)
 	if err != nil {
 		return Task{}, err
 	}
-	return tasks, nil
+	return task, nil
 }
 
-func (s *taskService) UpdateTask(id string, newText string) (Task, error) {
+func (s *taskService) UpdateTask(id int64, newText string) (Task, error) {
 	task, err := s.repo.GetTaskByID(id)
 	if err != nil {
 		return Task{}, err
@@ -55,7 +55,7 @@ func (s *taskService) UpdateTask(id string, newText string) (Task, error) {
 	return task, nil
 }
 
-func (s *taskService) DeleteTask(id string) error {
+func (s *taskService) DeleteTask(id int64) error {
 	err := s.repo.DeleteTask(id)
 	if err != nil {
 		return err

@@ -6,9 +6,9 @@ import "gorm.io/gorm"
 type TaskRepository interface {
 	CreateTask(req *Task) error
 	GetAllTasks() ([]Task, error)
-	GetTaskByID(id string) (Task, error)
+	GetTaskByID(id int64) (Task, error)
 	UpdateTask(task Task) error
-	DeleteTask(id string) error
+	DeleteTask(id int64) error
 }
 
 type taskRepository struct {
@@ -29,7 +29,7 @@ func (r *taskRepository) GetAllTasks() ([]Task, error) {
 	return tasks, err
 }
 
-func (r *taskRepository) GetTaskByID(id string) (Task, error) {
+func (r *taskRepository) GetTaskByID(id int64) (Task, error) {
 	var task Task
 	err := r.db.First(&task, "id = ?", id).Error
 	return task, err
@@ -39,6 +39,6 @@ func (r *taskRepository) UpdateTask(task Task) error {
 	return r.db.Save(&task).Error
 }
 
-func (r *taskRepository) DeleteTask(id string) error {
+func (r *taskRepository) DeleteTask(id int64) error {
 	return r.db.Delete(&Task{}, "id = ?", id).Error
 }

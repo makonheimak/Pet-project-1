@@ -4,7 +4,9 @@ import (
 	"log"
 	"myproject/internal/db"
 	"myproject/internal/handlers"
-	taskservice "myproject/internal/taskService"
+	"myproject/internal/taskservice"
+
+	"myproject/internal/web/tasks"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -22,13 +24,13 @@ func main() {
 
 	e := echo.New()
 
-	e.Use(middleware.CORS())
 	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
-	e.POST("/tasks", taskHandlers.PostTask)
-	e.GET("/tasks", taskHandlers.GetTasks)
-	e.PATCH("/tasks/:id", taskHandlers.PatchTask)
-	e.DELETE("/tasks/:id", taskHandlers.DeleteTask)
+	strictHandler := tasks.NewStrictHandler(taskHandlers, nil)
+	tasks.RegisterHandlers(e, strictHandler)
 
-	e.Start("localhost:8080")
+	if err := e.Start(":8080"); err != nil {
+		log.Fatalf("failed to start with err: %v", err)
+	}
 }

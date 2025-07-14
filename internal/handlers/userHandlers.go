@@ -4,7 +4,6 @@ import (
 	"context"
 	"myproject/internal/userservice"
 	"myproject/internal/web/users"
-	"time"
 )
 
 type UserHandlers struct {
@@ -25,18 +24,10 @@ func (h *UserHandlers) GetUsers(ctx context.Context, request users.GetUsersReque
 	for _, t := range usersAll {
 		tCopy := t
 
-		var deletedAt *time.Time
-		if tCopy.DeletedAt.Valid {
-			deletedAt = &tCopy.DeletedAt.Time
-		}
-
 		responseUsers = append(responseUsers, users.User{
-			Id:        &tCopy.ID,
-			Email:     tCopy.Email,
-			Password:  tCopy.Password,
-			CreatedAt: &tCopy.CreatedAt,
-			UpdatedAt: &tCopy.UpdatedAt,
-			DeletedAt: deletedAt,
+			Id:       &tCopy.ID,
+			Email:    tCopy.Email,
+			Password: tCopy.Password,
 		})
 	}
 

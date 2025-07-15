@@ -12,12 +12,11 @@ migrate:
 migrate-down:
 	$(MIGRATE) down
 
-gentasks:
+gen-tasks:
 	oapi-codegen -config openapi/.openapi -include-tags tasks -package tasks openapi/openapi.yaml > ./internal/web/tasks/api.gen.go
-
-genusers:
+	
+gen-users:
 	oapi-codegen -config openapi/.openapi -include-tags users -package users openapi/openapi.yaml > ./internal/web/users/api.gen.go
-
 
 lint:
 	golangci-lint run

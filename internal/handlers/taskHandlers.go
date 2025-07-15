@@ -24,7 +24,7 @@ func (h *TaskHandlers) GetTasks(ctx context.Context, request tasks.GetTasksReque
 	for _, t := range tasksAll {
 		tCopy := t
 		responseTasks = append(responseTasks, tasks.Task{
-			Id:   &tCopy.ID,
+			Id:   tCopy.ID,
 			Task: tCopy.Task,
 		})
 	}
@@ -32,9 +32,29 @@ func (h *TaskHandlers) GetTasks(ctx context.Context, request tasks.GetTasksReque
 	return tasks.GetTasks200JSONResponse(responseTasks), nil
 }
 
-func (h *TaskHandlers) CreateTask(ctx context.Context, request tasks.CreateTaskRequestObject) (tasks.CreateTaskResponseObject, error) {
+func (h *TaskHandlers) GetTasksByUserID(ctx context.Context, request tasks.GetTasksByUserIDRequestObject) (tasks.GetTasksByUserIDResponseObject, error) {
+	tasksByUser, err := h.service.GetTasksByUserID(uint(request.UserId))
+	if err != nil {
+		return nil, err
+	}
+
+	var responseTasks []tasks.Task
+	for _, t := range tasksByUser {
+		tCopy := t
+		responseTasks = append(responseTasks, tasks.Task{
+			Id:     tCopy.ID,
+			Task:   tCopy.Task,
+			UserId: int64(tCopy.UserID),
+		})
+	}
+
+	return tasks.GetTasksByUserID200JSONResponse(responseTasks), nil
+}
+
+func (h *TaskHandlers) PostTask(ctx context.Context, request tasks.PostTaskRequestObject) (tasks.PostTaskResponseObject, error) {
 	newTask := taskservice.Task{
-		Task: request.Body.Task,
+		Task:   request.Body.Task,
+		UserID: uint(request.Body.UserId),
 	}
 
 	createdTask, err := h.service.CreateTask(newTask)
@@ -43,11 +63,12 @@ func (h *TaskHandlers) CreateTask(ctx context.Context, request tasks.CreateTaskR
 	}
 
 	response := tasks.Task{
-		Id:   &createdTask.ID,
-		Task: createdTask.Task,
+		Id:     createdTask.ID,
+		Task:   createdTask.Task,
+		UserId: int64(createdTask.UserID),
 	}
 
-	return tasks.CreateTask201JSONResponse(response), nil
+	return tasks.PostTask201JSONResponse(response), nil
 }
 
 func (h *TaskHandlers) UpdateTask(ctx context.Context, request tasks.UpdateTaskRequestObject) (tasks.UpdateTaskResponseObject, error) {
@@ -57,8 +78,9 @@ func (h *TaskHandlers) UpdateTask(ctx context.Context, request tasks.UpdateTaskR
 	}
 
 	response := tasks.Task{
-		Id:   &updatedTask.ID,
-		Task: updatedTask.Task,
+		Id:     updatedTask.ID,
+		Task:   updatedTask.Task,
+		UserId: int64(updatedTask.UserID),
 	}
 
 	return tasks.UpdateTask200JSONResponse(response), nil

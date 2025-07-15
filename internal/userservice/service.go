@@ -1,9 +1,12 @@
 package userservice
 
+import "myproject/internal/taskservice"
+
 type UserService interface {
 	PostUser(req User) (User, error)
 	GetAllUsers() ([]User, error)
 	GetUserByID(id int64) (User, error)
+	GetTasksForUser(userID uint) ([]taskservice.Task, error)
 	PatchUserByID(id int64, email, password string) (User, error)
 	DeleteUserByID(id int64) error
 }
@@ -38,6 +41,10 @@ func (s *userService) GetUserByID(id int64) (User, error) {
 		return User{}, err
 	}
 	return user, nil
+}
+
+func (s *userService) GetTasksForUser(userID uint) ([]taskservice.Task, error) {
+	return s.repo.GetTasksForUser(userID)
 }
 
 func (s *userService) PatchUserByID(id int64, email, password string) (User, error) {

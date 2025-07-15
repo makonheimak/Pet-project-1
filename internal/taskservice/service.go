@@ -4,6 +4,7 @@ type TaskService interface {
 	CreateTask(req Task) (Task, error)
 	GetAllTasks() ([]Task, error)
 	GetTaskByID(id int64) (Task, error)
+	GetTasksByUserID(userID uint) ([]Task, error)
 	UpdateTask(id int64, task string) (Task, error)
 	DeleteTask(id int64) error
 }
@@ -38,6 +39,10 @@ func (s *taskService) GetTaskByID(id int64) (Task, error) {
 		return Task{}, err
 	}
 	return task, nil
+}
+
+func (s *taskService) GetTasksByUserID(userID uint) ([]Task, error) {
+	return s.repo.GetTasksByUserID(userID)
 }
 
 func (s *taskService) UpdateTask(id int64, newText string) (Task, error) {

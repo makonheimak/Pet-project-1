@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: API
+  title: API 
   version: 1.0.0
 
 paths:
@@ -21,24 +21,46 @@ paths:
                   $ref: '#/components/schemas/Task'
 
     post:
-      operationId: CreateTask
+      operationId: PostTask
       summary: Create a new task
       tags:
         - tasks
       requestBody:
-        description: The task to create
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Task'
+              $ref: '#/components/schemas/TaskCreate'
       responses:
         '201':
-          description: The created task
+          description: Task created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Task'
+
+  /tasks/user/{user_id}:
+    get:
+      operationId: GetTasksByUserID
+      summary: Get all tasks for a specific user
+      tags:
+        - tasks
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
 
   /tasks/{id}:
     patch:
@@ -121,7 +143,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-
+  
   /users/{id}:
     patch:
       operationId: PatchUserByID
@@ -176,11 +198,27 @@ components:
         id:
           type: integer
           format: int64
-          minimum: 0
         task:
           type: string
+        user_id:
+          type: integer
+          format: int64
+      required:
+        - id
+        - task
+        - user_id
+
+    TaskCreate:
+      type: object
+      properties:
+        task:
+          type: string
+        user_id:
+          type: integer
+          format: int64
       required:
         - task
+        - user_id
     
     User:
       type: object
@@ -198,10 +236,6 @@ components:
         updated_at:
           type: string
           format: date-time
-        deleted_at:
-          type: string
-          format: date-time
-          nullable: true
       required:
         - email
         - password
